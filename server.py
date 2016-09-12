@@ -34,7 +34,12 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         print ("Got a request of: %s\n" % self.data)
         self.request.sendall('HTTP/1.1 200 OK\r\n')
         self.request.sendall("Content-Type: text/html\n\n")
-        self.request.sendall('<html><body><h1>Hello World</body></html>')
+
+        f = open("www/index.html","r")
+        for line in f:
+            self.request.sendall(line)
+        f.close()
+        #self.request.sendall('<html><body><h1>Hello World</body></html>')
         #self.request.sendall(self.data)
         #self.request.close()
 
