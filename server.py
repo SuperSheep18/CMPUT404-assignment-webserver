@@ -39,6 +39,11 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
         if "css" in self.directory:
             self.request.sendall("Content-Type: text/css\n\n")
+            if (self.directory == "/deep.css"):
+                self.directory = "/deep/deep.css"
+
+            location = "www"+self.directory
+
             f = open("www"+self.directory,"r")
             for line in f:
                 self.request.sendall(line)
