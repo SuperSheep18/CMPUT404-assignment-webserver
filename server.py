@@ -36,25 +36,36 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         self.directory = self.data.split(" ")
         self.directory = self.directory[1]
 
-        if (self.directory not in ["/", "/deep", "/deep/", "/index.html", "/deep/index.html", "/base.css", "/deep.css","/deep/deep.css"]):
-            self.request.sendall('HTTP/1.1 404 NOT FOUND\r\n')
+        # Redirect for /deep Bullshit
+        if (self.directory == "/deep"):
+            self.request.sendall("HTTP/1.1 303 See Other")
+            self.request.sendall("Location: 127.0.0.1:8080/deep/")
+
+        # Is our request in the available directories?
+
+        # We need to make this list on the fly! Can't just hardcode this list.
+        elif (self.directory not in ["/", "/deep/", "/index.html", "/deep/index.html", "/base.css","/deep/deep.css"]):
+            self.request.sendall('HTTP/1.1 404 Not Found\r\n')
             self.request.sendall("Content-Type: text/html\n\n")
             self.request.sendall("<html>\n<body>\n<h1>404 NOOOOOOOOO!!!!</h1>\n</body>\n</html>")
+
+        # Request is good! Go do things?
         else:
             self.request.sendall('HTTP/1.1 200 OK\r\n')
 
-            # Request Block
+            # Is this some dank css?
             if "css" in self.directory:
                 self.request.sendall("Content-Type: text/css\n\n")
                 if (self.directory == "/deep.css" or self.directory == "www/deep.css"):
                     self.directory = "/deep/deep.css"
-                    
+
                 location = "www"+self.directory
                 f = open("www"+self.directory,"r")
                 for line in f:
                     self.request.sendall(line)
                 f.close()
 
+            # Is this some dank html?
             else:
                 self.request.sendall("Content-Type: text/html\n\n")
                 location = "www"+self.directory
