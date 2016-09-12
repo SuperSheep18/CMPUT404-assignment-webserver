@@ -33,15 +33,28 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
         self.request.sendall('HTTP/1.1 200 OK\r\n')
-        self.request.sendall("Content-Type: text/html\n\n")
 
-        f = open("www/index.html","r")
-        for line in f:
-            self.request.sendall(line)
-        f.close()
-        #self.request.sendall('<html><body><h1>Hello World</body></html>')
-        #self.request.sendall(self.data)
-        #self.request.close()
+        self.directory = self.data.split(" ")
+        self.directory = self.directory[1]
+
+        if "css" in self.directory:
+            self.request.sendall("Content-Type: text/css\n\n")
+            f = open("www"+self.directory,"r")
+            for line in f:
+                self.request.sendall(line)
+            f.close()
+        else:
+            self.request.sendall("Content-Type: text/html\n\n")
+            location = "www"+self.directory
+            if "index.html" not in location:
+                if (location[-1] != "/"):
+                    location += "/index.html"
+                else:
+                    location += "index.html"
+            f = open(location,"r")
+            for line in f:
+                self.request.sendall(line)
+            f.close()
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
