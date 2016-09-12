@@ -43,11 +43,11 @@ class MyWebServer(SocketServer.BaseRequestHandler):
                 self.directory = "/deep/deep.css"
 
             location = "www"+self.directory
-
             f = open("www"+self.directory,"r")
             for line in f:
                 self.request.sendall(line)
             f.close()
+            
         else:
             self.request.sendall("Content-Type: text/html\n\n")
             location = "www"+self.directory
