@@ -32,34 +32,41 @@ class MyWebServer(SocketServer.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
-        self.request.sendall('HTTP/1.1 200 OK\r\n')
 
         self.directory = self.data.split(" ")
         self.directory = self.directory[1]
 
-        if "css" in self.directory:
-            self.request.sendall("Content-Type: text/css\n\n")
-            if (self.directory == "/deep.css"):
-                self.directory = "/deep/deep.css"
-
-            location = "www"+self.directory
-            f = open("www"+self.directory,"r")
-            for line in f:
-                self.request.sendall(line)
-            f.close()
-            
-        else:
+        if (self.directory not in ["/", "/deep", "/deep/", "/index.html", "/deep/index.html", "/base.css", "/deep.css","/deep/deep.css"]):
+            self.request.sendall('HTTP/1.1 404 NOT FOUND\r\n')
             self.request.sendall("Content-Type: text/html\n\n")
-            location = "www"+self.directory
-            if "index.html" not in location:
-                if (location[-1] != "/"):
-                    location += "/index.html"
-                else:
-                    location += "index.html"
-            f = open(location,"r")
-            for line in f:
-                self.request.sendall(line)
-            f.close()
+            self.request.sendall("<html>\n<body>\n<h1>404 NOOOOOOOOO!!!!</h1>\n</body>\n</html>")
+        else:
+            self.request.sendall('HTTP/1.1 200 OK\r\n')
+
+            # Request Block
+            if "css" in self.directory:
+                self.request.sendall("Content-Type: text/css\n\n")
+                if (self.directory == "/deep.css" or self.directory == "www/deep.css"):
+                    self.directory = "/deep/deep.css"
+                    
+                location = "www"+self.directory
+                f = open("www"+self.directory,"r")
+                for line in f:
+                    self.request.sendall(line)
+                f.close()
+
+            else:
+                self.request.sendall("Content-Type: text/html\n\n")
+                location = "www"+self.directory
+                if "index.html" not in location:
+                    if (location[-1] != "/"):
+                        location += "/index.html"
+                    else:
+                        location += "index.html"
+                f = open(location,"r")
+                for line in f:
+                    self.request.sendall(line)
+                f.close()
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
