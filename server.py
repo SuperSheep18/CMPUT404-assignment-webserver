@@ -1,6 +1,6 @@
 #  coding: utf-8 
 import SocketServer
-
+import os
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ import SocketServer
 
 # try: curl -v -X GET http://127.0.0.1:8080/
 
-
+# ["/", "/deep/", "/index.html", "/deep/index.html", "/base.css","/deep/deep.css"]
 class MyWebServer(SocketServer.BaseRequestHandler):
     
     def handle(self):
@@ -34,6 +34,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         print ("Got a request of: %s\n" % self.data)
 
         self.directory = self.data.split(" ")
+        #print("self.directory list",self.directory)
         self.directory = self.directory[1]
 
         # Redirect for /deep Bullshit
@@ -44,7 +45,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         # Is our request in the available directories?
 
         # We need to make this list on the fly! Can't just hardcode this list.
-        elif (self.directory not in ["/", "/deep/", "/index.html", "/deep/index.html", "/base.css","/deep/deep.css"]):
+        elif (self.directory not in fileNamesList):
             self.request.sendall('HTTP/1.1 404 Not Found\r\n')
             self.request.sendall("Content-Type: text/html\n\n")
             self.request.sendall("<html>\n<body>\n<h1>404 NOOOOOOOOO!!!!</h1>\n</body>\n</html>")
@@ -86,6 +87,21 @@ if __name__ == "__main__":
     # Create the server, binding to localhost on port 8080
     server = SocketServer.TCPServer((HOST, PORT), MyWebServer)
 
+    fileNamesList = ["/"]
+
+    for root, subdirs, files in os.walk('www'):
+        for subdir in subdirs:
+            if fileNamesList[0] + subdir not in fileNamesList:
+                fileNamesList.append(fileNamesList[0] + subdir)
+                fileNamesList.append(fileNamesList[0] + subdir + "/")
+
+        for fileName in files:
+            filePath = os.path.join(root, fileName)
+            if filePath[3:] not in fileNamesList:
+                fileNamesList.append(filePath[3:])
+                #fileNamesList.append(filePath[3:] + "/")
+
+    print(fileNamesList)
     # Activate the server; this will keep running until you
     # interrupt the program with Ctrl-C
     server.serve_forever()
