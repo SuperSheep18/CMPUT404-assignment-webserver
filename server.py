@@ -32,53 +32,51 @@ class MyWebServer(SocketServer.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
-
         self.directory = self.data.split(" ")
-        #print("self.directory list",self.directory)
-        self.directory = self.directory[1]
 
-        # Redirect for /deep Bullshit
-        if (self.directory == "/deep"):
-            self.request.sendall("HTTP/1.1 303 See Other")
-            self.request.sendall("Location: 127.0.0.1:8080/deep/")
+        # Avoids some bad blank requests.
+        if (len(self.directory) > 1):
+            self.directory = self.directory[1]
 
-        # Is our request in the available directories?
-
-        # We need to make this list on the fly! Can't just hardcode this list.
-        elif (self.directory not in fileNamesList):
-            self.request.sendall('HTTP/1.1 404 Not Found\r\n')
-            self.request.sendall("Content-Type: text/html\n\n")
-            self.request.sendall("<html>\n<body>\n<h1>404 NOOOOOOOOO!!!!</h1>\n</body>\n</html>")
-
-        # Request is good! Go do things?
-        else:
-            self.request.sendall('HTTP/1.1 200 OK\r\n')
-
-            # Is this some dank css?
-            if "css" in self.directory:
-                self.request.sendall("Content-Type: text/css\n\n")
-                if (self.directory == "/deep.css" or self.directory == "www/deep.css"):
-                    self.directory = "/deep/deep.css"
-
-                location = "www"+self.directory
-                f = open("www"+self.directory,"r")
-                for line in f:
-                    self.request.sendall(line)
-                f.close()
-
-            # Is this some dank html?
-            else:
+            if (self.directory[-1] != '/' and ".html" not in self.directory and ".css" not in self.directory and self.directory + '/' in fileNamesList):    
+                self.request.sendall('HTTP/1.1 400 Bad Request\r\n')
                 self.request.sendall("Content-Type: text/html\n\n")
-                location = "www"+self.directory
-                if "index.html" not in location:
-                    if (location[-1] != "/"):
-                        location += "/index.html"
-                    else:
-                        location += "index.html"
-                f = open(location,"r")
-                for line in f:
-                    self.request.sendall(line)
-                f.close()
+                self.request.sendall("<html>\n<body>\n<h1>400 Bad Request</h1>\n<h2>Did you forget a '/'?</h2>\n<h3>Perhaps you meant: "+self.directory +'/'+"</h3>\n</body>\n</html>")
+                #self.request.sendall()
+
+            elif (self.directory not in fileNamesList):
+                self.request.sendall('HTTP/1.1 404 Not Found\r\n')
+                self.request.sendall("Content-Type: text/html\n\n")
+                self.request.sendall("<html>\n<body>\n<h1>404 NOOOOOOOOO!!!!</h1>\n</body>\n</html>")
+
+            # Request is good! Go do things?
+            else:
+                self.request.sendall('HTTP/1.1 200 OK\r\n')
+
+                # Is this some dank css?
+                if "css" in self.directory:
+                    self.request.sendall("Content-Type: text/css\n\n")
+
+                    location = "www"+self.directory
+                    f = open("www"+self.directory,"r")
+                    for line in f:
+                        self.request.sendall(line)
+                    f.close()
+
+                # Is this some dank html?
+                else:
+                    self.request.sendall("Content-Type: text/html\n\n")
+                    location = "www"+self.directory
+                    if "index.html" not in location:
+                        if (location[-1] != "/"):
+                            location += "/index.html"
+                        else:
+                            location += "index.html"
+                    f = open(location,"r")
+                    for line in f:
+                        self.request.sendall(line)
+                    f.close()
+
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
