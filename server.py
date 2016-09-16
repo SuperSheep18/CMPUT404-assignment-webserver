@@ -30,6 +30,19 @@ import os
 class MyWebServer(SocketServer.BaseRequestHandler):
     
     def handle(self):
+        fileNamesList = ["/"]
+
+        for root, subdirs, files in os.walk('www'):
+            for subdir in subdirs:
+                if fileNamesList[0] + subdir not in fileNamesList:
+                    fileNamesList.append(fileNamesList[0] + subdir)
+                    fileNamesList.append(fileNamesList[0] + subdir + "/")
+
+            for fileName in files:
+                filePath = os.path.join(root, fileName)
+                if filePath[3:] not in fileNamesList:
+                    fileNamesList.append(filePath[3:])
+                
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
         self.directory = self.data.split(" ")
@@ -76,7 +89,6 @@ class MyWebServer(SocketServer.BaseRequestHandler):
                         self.request.sendall(line)
                     f.close()
 
-
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
 
@@ -84,18 +96,7 @@ if __name__ == "__main__":
     # Create the server, binding to localhost on port 8080
     server = SocketServer.TCPServer((HOST, PORT), MyWebServer)
 
-    fileNamesList = ["/"]
-
-    for root, subdirs, files in os.walk('www'):
-        for subdir in subdirs:
-            if fileNamesList[0] + subdir not in fileNamesList:
-                fileNamesList.append(fileNamesList[0] + subdir)
-                fileNamesList.append(fileNamesList[0] + subdir + "/")
-
-        for fileName in files:
-            filePath = os.path.join(root, fileName)
-            if filePath[3:] not in fileNamesList:
-                fileNamesList.append(filePath[3:])
+    
                 #fileNamesList.append(filePath[3:] + "/")
 
     # Activate the server; this will keep running until you
