@@ -42,7 +42,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
                 print("Sending redirect!")
                 #self.request.sendall('HTTP/1.1 400 Bad Request\r\n')
                 self.request.sendall("HTTP/1.1 303 See Other\r\n")
-                self.request.sendall("Location: localhost:8080/"+self.directory+"/\r\n")
+                self.request.sendall("Location: "+self.directory+"/\r\n")
                 #self.request.sendall("Content-Type: text/html\n\n")
                 #self.request.sendall("<html>\n<body>\n<h1>400 Bad Request</h1>\n<h2>Did you forget a '/'?</h2>\n<h3>Perhaps you meant: "+self.directory +'/'+"</h3>\n</body>\n</html>")
 
