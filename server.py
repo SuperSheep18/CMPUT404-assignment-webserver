@@ -45,7 +45,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
             elif (self.directory not in fileNamesList):
                 self.request.sendall('HTTP/1.1 404 Not Found\r\n')
-                self.request.sendall("Content-Type: text/html\n\n")
+                self.request.sendall("Content-Type: text/html\r\n")
                 self.request.sendall("<html>\n<body>\n<h1>404 NOOOOOOOOO!!!!</h1>\n</body>\n</html>")
 
             # Request is good! Go do things?
@@ -54,7 +54,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
                 # Is this some dank css?
                 if "css" in self.directory:
-                    self.request.sendall("Content-Type: text/css\n\n")
+                    self.request.sendall("Content-Type: text/css\r\n")
 
                     location = "www"+self.directory
                     f = open("www"+self.directory,"r")
@@ -64,7 +64,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
                 # Is this some dank html?
                 else:
-                    self.request.sendall("Content-Type: text/html\n\n")
+                    self.request.sendall("Content-Type: text/html\r\n")
                     location = "www"+self.directory
                     if "index.html" not in location:
                         if (location[-1] != "/"):
