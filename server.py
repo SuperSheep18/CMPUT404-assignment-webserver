@@ -40,11 +40,8 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
             if (self.directory[-1] != '/' and ".html" not in self.directory and ".css" not in self.directory and self.directory + '/' in fileNamesList):
                 print("Sending redirect!")
-                #self.request.sendall('HTTP/1.1 400 Bad Request\r\n')
                 self.request.sendall("HTTP/1.1 303 See Other\r\n")
                 self.request.sendall("Location: "+self.directory+"/\r\n")
-                #self.request.sendall("Content-Type: text/html\n\n")
-                #self.request.sendall("<html>\n<body>\n<h1>400 Bad Request</h1>\n<h2>Did you forget a '/'?</h2>\n<h3>Perhaps you meant: "+self.directory +'/'+"</h3>\n</body>\n</html>")
 
             elif (self.directory not in fileNamesList):
                 self.request.sendall('HTTP/1.1 404 Not Found\r\n')
@@ -101,7 +98,6 @@ if __name__ == "__main__":
                 fileNamesList.append(filePath[3:])
                 #fileNamesList.append(filePath[3:] + "/")
 
-    print(fileNamesList)
     # Activate the server; this will keep running until you
     # interrupt the program with Ctrl-C
     server.serve_forever()
