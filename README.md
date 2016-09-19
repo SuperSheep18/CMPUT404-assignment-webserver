@@ -22,7 +22,7 @@ examples thus some of the code is Copyright © 2001-2013 Python
 Software Foundation; All Rights Reserved under the PSF license (GPL
 compatible) http://docs.python.org/2/library/socketserver.html
 
-* Assignment Contributors: 
+**Assignment Contributors:**
 
 * Aedan Burnett - ccid:aedan (This is me)
 * Rishi Barnwal - ccid:barnwal (Partner for this assignment)
