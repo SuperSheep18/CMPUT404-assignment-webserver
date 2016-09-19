@@ -10,7 +10,7 @@ Make a simple webserver.
 Contributors / Licensing
 ========================
 
-Generally everything is LICENSE'D under the Apache 2 license by Abram Hindle.
+Generally everything is LICENSE'D under the Apache 2 license by Abram Hindle. See LICENSE for details.
 
 server.py contains contributions from:
 
@@ -30,7 +30,3 @@ compatible) http://docs.python.org/2/library/socketserver.html
 **Citations:**
 
 Marshall, James. "HTTP Made Really Easy." HTTP Made Really Easy. N.p., n.d. Web. 16 Sept. 2016. <https://www.jmarshall.com/easy/http/#whatis>
-
-**Licensing:**
-
-See "LICENSE" file.
