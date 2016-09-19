@@ -24,8 +24,8 @@ compatible) http://docs.python.org/2/library/socketserver.html
 
 **Assignment Contributors:**
 
-* Aedan Burnett - ccid:aedan (This is me)
-* Rishi Barnwal - ccid:barnwal (Partner for this assignment)
+* Aedan Burnett - ccid :: aedan (This is me)
+* Rishi Barnwal - ccid :: barnwal (Partner for this assignment)
 
 **Citations:**
 
