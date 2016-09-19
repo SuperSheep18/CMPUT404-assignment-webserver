@@ -27,6 +27,6 @@ compatible) http://docs.python.org/2/library/socketserver.html
 * Aedan Burnett - ccid:aedan (This is me)
 * Rishi Barnwal - ccid:barnwal (Partner for this assignment)
 
-* Citations:
+**Citations:**
 
 Marshall, James. "HTTP Made Really Easy." HTTP Made Really Easy. N.p., n.d. Web. 16 Sept. 2016. <https://www.jmarshall.com/easy/http/#whatis>
